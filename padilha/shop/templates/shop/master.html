@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Padilha's webshop</title>
+    {% load static %}
+    
+    <link rel="stylesheet" href="{% static 'shop/styles/patternstyle.css' %}"> 
+</head>
+<body>
+    <img class="logo"  src="{% static 'shop/images/logo.png' %}">
+    <h1>{{ title }}</h1>
+    {% block main %}{% endblock %}
+</body>
+</html>

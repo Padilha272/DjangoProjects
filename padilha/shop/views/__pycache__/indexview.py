@@ -10,9 +10,7 @@ class IndexView(TemplateView):
     
     def get(self, request):
         products = Product.objects.order_by("name")
-        context = {
-            "title": "All products",
-            "products":[{"id" : p.id,"name":p.name, "price":p.price ,"image": p.image} for p in products]}
+        context = {"products":[{"name":p.name, "price":p.price} for p in products]}
         template = loader.get_template(self.template_name)
         return HttpResponse(template.render(context,request))
     

@@ -1,0 +1,33 @@
+body {
+    font-family: sans-serif;
+    font-weight: normal;
+    margin: 0;
+}
+
+.logo {
+    width: 180px;
+}
+
+#productgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* layout responsivo */
+    gap: 8px;
+}
+
+
+.product {
+    width: 160px; 
+    text-align: center;
+    border-radius: 20px;
+    background-color: #F2F9FB;
+}
+
+.product img {
+    width: 140px;
+    height: 140px;
+    padding: 8px
+}
+
+.productdetailsimage{
+    width: 240px;
+}

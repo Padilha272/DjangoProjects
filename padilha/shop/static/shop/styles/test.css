@@ -1,0 +1,22 @@
+body {
+    font-family: sans-serif;
+    font-weight: normal;
+    margin: 0;
+}
+
+.logo {
+    width: 180px;
+}
+
+#productgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* layout responsivo */
+    gap: 8px;
+}
+
+
+.product img {
+    max-width: 100%; /* Redimensiona a imagem para caber no contêiner pai */
+    height: auto;
+}
+

@@ -5,14 +5,18 @@ from shop.models import Product
 
 #A class based view wil have a get method, which will return a
 #modified get method
-class IndexView(TemplateView):
-    template_name="shop/index.html"
+class ProductDetailsView(TemplateView):
+    template_name="shop/productdetails.html"
     
-    def get(self, request):
-        products = Product.objects.order_by("name")
+    def get(self, request, id):
+        product = Product.objects.get(id=id)
         context = {
-            "title": "All products",
-            "products":[{"id" : p.id,"name":p.name, "price":p.price ,"image": p.image} for p in products]}
+            "title": product.name,
+            "description": product.description,
+            "price": product.price,
+            "volume:": product.volume,
+            "image": product.image
+        }
         template = loader.get_template(self.template_name)
         return HttpResponse(template.render(context,request))
     
