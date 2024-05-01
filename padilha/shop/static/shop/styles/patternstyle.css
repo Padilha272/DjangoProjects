@@ -6,6 +6,18 @@ body {
 
 .logo {
     width: 180px;
+    float: left;
+}
+
+.search {
+   float: left;
+   margin: 24px 80px; 
+}
+
+#header::after {
+    content: "";
+    clear: both;
+    display: table;
 }
 
 #productgrid {

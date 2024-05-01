@@ -10,6 +10,10 @@
 <body>
     <div id="header">
         <img class="logo"  src="{% static 'shop/images/logo.png' %}">
+        <form class="search" action="{% url 'index' %}" method="get">
+            <input type="text" name="q" value="{{ filter }}">
+            <button type="submit">Search</button>
+        </form>
     </div>   
     <div id = "categories">
         <ul>
