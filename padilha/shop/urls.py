@@ -4,6 +4,8 @@ from shop.views.productdetailsview import ProductDetailsView
 
 
 urlpatterns = [
-    path("", IndexView.as_view(), name="index"),
-    path("products/<int:id>", ProductDetailsView.as_view(), name="products")
+    path("categories/<int:id>", IndexView.as_view(), name="categories"),
+    path("products/<int:id>", ProductDetailsView.as_view(), name="products"),
+    path("", IndexView.as_view(), name="index")
+    
 ]

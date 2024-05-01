@@ -8,7 +8,18 @@
     <link rel="stylesheet" href="{% static 'shop/styles/patternstyle.css' %}"> 
 </head>
 <body>
-    <img class="logo"  src="{% static 'shop/images/logo.png' %}">
+    <div id="header">
+        <img class="logo"  src="{% static 'shop/images/logo.png' %}">
+    </div>   
+    <div id = "categories">
+        <ul>
+            <Li><a href="{% url 'index' %}">All</a></Li>
+            {% for category in categories %}
+            <Li><a href="{% url 'categories' category.id %}">{{category.name}}</a></Li>
+            {% endfor %}
+
+        </ul>
+    </div>
     <h1>{{ title }}</h1>
     {% block main %}{% endblock %}
 </body>
