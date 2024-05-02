@@ -2,18 +2,19 @@ body {
     font-family: sans-serif;
     font-weight: normal;
     margin: 0;
+    
 }
-
+/*Logo style */
 .logo {
     width: 180px;
     float: left;
 }
-
+/*Custom Search Bar style */
 .search {
    float: left;
    margin: 24px 80px; 
 }
-
+/* Clean floats */
 #header::after {
     content: "";
     clear: both;
@@ -26,7 +27,7 @@ body {
     gap: 8px;
 }
 
-
+/*Product style */
 .product {
     width: 160px; 
     text-align: center;
@@ -57,4 +58,25 @@ body {
 #categories Li{
     list-style: none;
     padding: 8px;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Add space after content */
+h1:last-child {
+    margin-bottom: 60px; /* Ajuste este valor conforme necessário */
+}
+
+.welcome-message {
+    color: black; /* Defina a cor desejada para o texto */
 }

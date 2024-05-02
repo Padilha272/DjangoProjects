@@ -1,10 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Padilha's webshop</title>
-    {% load static %}
-    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'shop/styles/patternstyle.css' %}"> 
 </head>
 <body>
@@ -14,17 +14,36 @@
             <input type="text" name="q" value="{{ filter }}">
             <button type="submit">Search</button>
         </form>
+        <nav class="ml-auto">
+            <ul class="nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link">Logout</button>
+                        </form>
+                    </li>
+                    <li class="nav-item"><p class="nav-link">Welcome, {{ user.username }}!</p></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>   
-    <div id = "categories">
+    <div id="categories">
         <ul>
-            <Li><a href="{% url 'index' %}">All</a></Li>
+            <li><a href="{% url 'index' %}">All</a></li>
             {% for category in categories %}
-            <Li><a href="{% url 'categories' category.id %}">{{category.name}}</a></Li>
+            <li><a href="{% url 'categories' category.id %}">{{ category.name }}</a></li>
             {% endfor %}
-
         </ul>
     </div>
     <h1>{{ title }}</h1>
     {% block main %}{% endblock %}
+   
+    <footer class="fixed-button bg dark text-light text-center py-3">
+        <p> &copy: 2024 Padilha's webshop. All rights reserved.</p>
+    </footer>
 </body>
 </html>

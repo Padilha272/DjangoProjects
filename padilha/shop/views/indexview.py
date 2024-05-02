@@ -25,7 +25,9 @@ class IndexView(TemplateView):
             "filter": filter,
             "categories": [{"id":c.id,"name":c.name} for c in categories],
             "title": title,
-            "products":[{"id" : p.id,"name":p.name, "price":p.price ,"image": p.image} for p in products]}
+            "products":[{"id" : p.id,"name":p.name, "price":p.price ,"image": p.image} for p in products],
+            "user": request.user
+        }
         template = loader.get_template(self.template_name)
         return HttpResponse(template.render(context,request))
     
