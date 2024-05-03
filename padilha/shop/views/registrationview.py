@@ -1,17 +1,15 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from shop.forms import UserRegistrationForm
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('index')#Redirect to index after registration
+            messages.success(request, f'Account created for {username}!')
+            return redirect('login')
     else:
-        form = UserCreationForm()
-    return render(request, 'shop/register.html',{'form':form})
+        form = UserRegistrationForm()
+    return render(request, 'shop/register.html', {'form': form})

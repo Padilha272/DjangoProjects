@@ -1,7 +1,7 @@
 {% extends "shop/master.html" %}
 {% load html_formatters %}
 {% block main %}
-<div id="productgrid">
+<div id="productgrid" class="index-content">
     {% for product in products %}
     <div class="product">
         <img src="{% productimage product.image%}">
