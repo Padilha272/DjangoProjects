@@ -10,6 +10,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'api',
     'variety.apps.VarietyConfig',
     'shop.apps.ShopConfig',
     'django.contrib.admin',
