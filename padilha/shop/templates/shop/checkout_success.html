@@ -1,0 +1,9 @@
+{% extends 'master.html' %}
+
+{% block title %} Order Success {% endblock %}
+
+{% block content %}
+<h1>Thank you for your order!</h1>
+<p>Your order number is {{ order.id }}.</p>
+<a href="{% url 'index' %}" class="btn btn-primary">Continue Shopping</a>
+{% endblock %}

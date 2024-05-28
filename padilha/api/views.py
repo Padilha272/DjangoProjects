@@ -1,15 +1,13 @@
-from django.shortcuts import render
-
-# api/views.py
-from rest_framework import generics
-from shop.models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer
-from rest_framework import status
+from django.shortcuts import render, get_object_or_404, redirect
+from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Cart,CartItem, Order
-from .serializers import CartSerializer,CartItemSerializer, OrderSerializer
+from shop.models import Category, Product
+from .models import Cart, CartItem, Order
+from .serializers import CategorySerializer, ProductSerializer, CartSerializer, CartItemSerializer, OrderSerializer
+from django.contrib.auth.decorators import login_required
+
 
 
 class CartDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -51,15 +49,12 @@ class OrderListCreate(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 @api_view(['POST'])
+@login_required
 def add_to_cart(request, product_id):
     user = request.user
-    try:
-         cart = Cart.objects.get(user=user)
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(user=user)
+    cart, _ = Cart.objects.get_or_create(user=user)
+    product = get_object_or_404(Product, pk=product_id)
 
-    product = Product.objects.get(pk=product_id)
-    
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
     if not created:
         cart_item.quantity += 1
@@ -68,12 +63,15 @@ def add_to_cart(request, product_id):
     serializer = CartItemSerializer(cart_item)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 @api_view(['POST'])
+@login_required
 def remove_from_cart(request, product_id):
     user = request.user
+    cart = get_object_or_404(Cart, user=user)
+    product = get_object_or_404(Product, pk=product_id)
+
     try:
-        cart = Cart.objects.get(user=user)
-        product = Product.objects.get(pk=product_id)
         cart_item = CartItem.objects.get(cart=cart, product=product)
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
@@ -81,62 +79,78 @@ def remove_from_cart(request, product_id):
         else:
             cart_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    except Cart.DoesNotExist:
-        return Response({"error": "Cart does not exist."}, status=status.HTTP_404_NOT_FOUND)
-    except Product.DoesNotExist:
-        return Response({"error": "Product not found in cart."}, status=status.HTTP_404_NOT_FOUND)
     except CartItem.DoesNotExist:
         return Response({"error": "Item not found in cart."}, status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['POST'])
+@login_required
 def checkout(request):
     user = request.user
-    cart = Cart.objects.get(user=user)
+    cart = get_object_or_404(Cart, user=user)
     cart_items = cart.items.all()
-    total_amount = sum(item.product.price * item.quantity for item in cart_items)
 
+    if not cart_items:
+        return Response({"error": "Cart is empty."}, status=status.HTTP_400_BAD_REQUEST)
+
+    total_amount = sum(item.product.price * item.quantity for item in cart_items)
     order = Order.objects.create(user=user, total_amount=total_amount)
 
     for cart_item in cart_items:
         order.items.add(cart_item)
         cart_item.delete()
 
-    serializer = OrderSerializer(order)
-    return Response(serializer.data)
+    cart.delete()  # Clean up the cart after checkout
 
-class CartDetailAPIView(APIView):
+    serializer = OrderSerializer(order)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CartDetail(APIView):
+    @login_required
     def get(self, request, format=None):
-        user = request.user
-        cart, _ = Cart.objects.get_or_create(user=user)
+        cart = self.get_or_create_cart(request)
         serializer = CartSerializer(cart)
         return Response(serializer.data)
 
-    def put(self, request, format=None):
+    @login_required
+    def get_or_create_cart(self, request):
         user = request.user
-        cart, _ = Cart.objects.get_or_create(user=user)
+        cart, created = Cart.objects.get_or_create(user=user)
+        return cart
+
+    @login_required
+    def post(self, request, format=None):
+        cart = self.get_or_create_cart(request)
         serializer = CartSerializer(cart, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @login_required
     def delete(self, request, format=None):
         user = request.user
-        cart = Cart.objects.get(user=user)
+        cart = get_object_or_404(Cart, user=user)
         cart.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class CartItemListAPIView(APIView):
+
+class CartItemList(APIView):
+    @login_required
     def get(self, request, format=None):
         user = request.user
-        cart, _ = Cart.objects.get_or_create(user=user)
+        cart = get_object_or_404(Cart, user=user)
         items = cart.items.all()
         serializer = CartItemSerializer(items, many=True)
         return Response(serializer.data)
 
+    @login_required
     def post(self, request, format=None):
+        user = request.user
+        cart, _ = Cart.objects.get_or_create(user=user)
         serializer = CartItemSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(cart=cart)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

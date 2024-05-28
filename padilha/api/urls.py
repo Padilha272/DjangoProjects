@@ -1,10 +1,10 @@
-# api/urls.py
 from django.urls import path
-from . import views
+from .views import add_to_cart, remove_from_cart, checkout, CartDetail, CartItemList
 
 urlpatterns = [
-    path('cart/', views.CartDetail.as_view(), name='cart-detail'),
-    path('cart/items/', views.CartItemListCreate.as_view(), name='cart-item-list-create'),
-    path('orders/', views.OrderListCreate.as_view(), name='order-list-create'),
-    path('checkout/', views.checkout, name='checkout'),
+    path('add_to_cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
+    path('remove_from_cart/<int:product_id>/', remove_from_cart, name='remove_from_cart'),
+    path('checkout/', checkout, name='checkout'),
+    path('cart/', CartDetail.as_view(), name='cart_detail'),
+    path('cart_items/', CartItemList.as_view(), name='cart_item_list'),
 ]

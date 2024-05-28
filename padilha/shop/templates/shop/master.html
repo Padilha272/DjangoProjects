@@ -3,13 +3,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Padilha's webshop</title>
+    <title>{% block title %}Padilha's webshop{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'shop/styles/patternstyle.css' %}"> 
+    <link rel="stylesheet" href="{% static 'shop/styles/patternstyle.css' %}">
 </head>
 <body>
     <div id="header">
-        <img class="logo"  src="{% static 'shop/images/logo.png' %}">
+        <img class="logo" src="{% static 'shop/images/logo.png' %}">
         <form class="search" action="{% url 'index' %}" method="get">
             <input type="text" name="q" value="{{ filter }}">
             <button type="submit">Search</button>
@@ -20,7 +20,7 @@
                     <li class="nav-item">
                         <form action="{% url 'logout' %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="nav-link">Logout</button>
+                            <button type="submit" class="nav-link btn btn-link">Logout</button>
                         </form>
                     </li>
                     <li class="nav-item"><p class="nav-link">Welcome, {{ user.username }}!</p></li>
@@ -39,12 +39,14 @@
             {% endfor %}
         </ul>
     </div>
-    <h1>{{ title }}</h1>
-    {% block main %}{% endblock %}
+    <h1>{% block title_content %}{{ title }}{% endblock %}</h1>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
    
     <div id="footer-wrapper">
-        <footer class="fixed-button bg dark text-light text-center py-3">
-            <p> &copy: 2024 Padilha's webshop. All rights reserved.</p>
+        <footer class="fixed-button bg-dark text-light text-center py-3">
+            <p>&copy; 2024 Padilha's webshop. All rights reserved.</p>
         </footer>
     </div>
     

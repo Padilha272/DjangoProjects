@@ -1,0 +1,21 @@
+{% extends 'master.html' %}
+
+{% block title %} Checkout {% endblock %}
+
+{% block content %}
+<h1>Checkout</h1>
+<h2>Order Summary</h2>
+<ul class="list-group">
+    {% for item in cart_items %}
+    <li class="list-group-item">
+        {{ item.product.name }} - Quantity: {{ item.quantity }}
+    </li>
+    {% endfor %}
+</ul>
+<p> Total Amount: ${{ total_amount }}</p>
+<form action="{% url 'checkout' %}" method="post">
+    {% crsf_token %}
+    <button type="submit" class="btn btn-success">Confirm Order</button>
+</form>
+{% endblock %}
+
