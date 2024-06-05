@@ -1,0 +1,22 @@
+{% extends 'master.html' %}
+{% block content %}
+<h1>Meus Pedidos</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID do Pedido</th>
+            <th>Total</th>
+            <th>Data</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{order.id}}</td>
+            <td>{{order.total_amount}}</td>
+            <td>{{order.created_at}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock%}

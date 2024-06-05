@@ -1,0 +1,10 @@
+{% extends 'master.html '%}
+
+{% block content%}
+<h1>Finalizar Compra</h1>
+<p>Total: {{ cart.items|cart_total }}</p>
+<form method="post" action="{% url 'checkout' %}">
+    {% csrf_token %}
+    <button type="submit">Confirmar Pedido</button>
+</form> 
+{% endblock %}

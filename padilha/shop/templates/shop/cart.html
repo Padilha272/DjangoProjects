@@ -1,0 +1,33 @@
+{% extends 'master.html' %}
+{% load cart_extras %}
+{% block content %}
+<h1>Meu carrinho</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Total</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart.items %}
+        <tr>
+            <td>{{item.product.name}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.product.price}}</td>
+            <td>{{item.product.price|multiply:item.quantity}}</td>
+            <td>
+                <form method="post" action="{% url 'remove-from-cart' item.product.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Remover</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>Total: {{ cart.items|cart_total}}</p>
+<a href="{% url 'checkout' %}">Finalizar Compra</a>
+{% endblock %}

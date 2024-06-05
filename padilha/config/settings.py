@@ -59,10 +59,8 @@ DATABASES = {
     }
 }
 
-# Substitua 'auth.User' por 'shop.User' em todas as referências
 AUTH_USER_MODEL = 'shop.User'
 
-# Adicione essa linha
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]

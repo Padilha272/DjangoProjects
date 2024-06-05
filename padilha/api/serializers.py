@@ -14,22 +14,22 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+    product = ProductSerializer(read_only=True)
 
     class Meta:
-        model = Cart
-        fields = ['id','product','quantity']
+        model = CartItem
+        fields = ['id', 'product', 'quantity']
 
 class CartSerializer(serializers.ModelSerializer):
-    items = CartItemSerializer(many=True)
+    items = CartItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cart
-        fields = '__all__'
+        fields = ['id', 'user', 'items', 'created_at']
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = CartItemSerializer(many=True)
+    items = CartItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ['id', 'user', 'items', 'total_amount', 'created_at']
